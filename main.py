@@ -97,6 +97,9 @@ def tick(token: str) -> None:
     seen_ids = set(state["seen_ids"])
 
     if not state["first_run_done"]:
+        if not matching_ads:
+            print("Prima rulare: 0 anunturi gasite (posibil eroare de fetch) — reincerc la urmatorul tick.")
+            return
         print(f"Prima rulare: {len(matching_ads)} anunturi curente salvate, fara notificari.")
         state["seen_ids"] = list(seen_ids | {ad["id"] for ad in matching_ads})
         state["first_run_done"] = True
@@ -131,7 +134,7 @@ def main() -> None:
     while True:
         try:
             tick(token)
-        except Exception as exc:  # nu lasa o eroare trecatoare (retea etc) sa opreasca bucla
+        except Exception as exc: 
             print(f"Eroare neasteptata: {exc}")
 
         if run_once:

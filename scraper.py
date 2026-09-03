@@ -65,8 +65,10 @@ def fetch_matching_ads(config: dict) -> list[dict]:
     for page in range(1, config["pages_to_check"] + 1):
         try:
             html = fetch_page(page)
-        except requests.RequestException as exc:
-            print(f"Eroare la pagina {page}: {exc}")
+        except requests.RequestException:
+            if page == 1:
+                raise 
+            print(f"Eroare la pagina {page}, continui cu ce am gasit pana acum.")
             break
         page_ads = parse_ads(html)
         if not page_ads:
